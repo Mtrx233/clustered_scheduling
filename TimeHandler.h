@@ -23,22 +23,9 @@ public:
     static void sleep_for_ts (TimeType& sleep_time);
     static void busy_work(TimeType length);
     static TimeType create_time(long sec, long nsec);
-
-    // friend std::ostream& operator<<(std::ostream& stream, const TimeType& ts);
-    // friend TimeType operator+(const TimeType& ts1, const TimeType& ts2);
-    // friend TimeType operator*(const TimeType& ts, double scalar);
-    // friend TimeType operator*(double scalar, const TimeType& ts);
-    // friend TimeType operator/(const TimeType& ts, double scalar);
-    // friend double operator/(const TimeType& ts1, const TimeType& ts2);
     
-    // friend bool operator>(const TimeType& lhs, const TimeType& rhs);
-    // friend bool operator<(const TimeType& lhs, const TimeType& rhs);
-    // friend bool operator==(const TimeType& lhs, const TimeType& rhs);
-    // friend bool operator<=(const TimeType& lhs, const TimeType& rhs);
-    // friend bool operator>=(const TimeType& lhs, const TimeType& rhs);
-    // friend bool operator!=(const TimeType& lhs, const TimeType& rhs);
-
-    riend std::ostream& operator<<(std::ostream& stream, const TimeType& ts);
+    template <tyname T>
+    friend std::ostream& operator<<(std::ostream& stream, const T& ts);
     friend TimeType operator+(const TimeType& ts1, const TimeType& ts2);
     friend TimeType operator*(const TimeType& ts, double scalar);
     friend TimeType operator*(double scalar, const TimeType& ts);
@@ -51,42 +38,16 @@ public:
     friend bool operator<=(const TimeType& lhs, const TimeType& rhs);
     friend bool operator>=(const TimeType& lhs, const TimeType& rhs);
     friend bool operator!=(const TimeType& lhs, const TimeType& rhs);
+
+    static TimeType add(const TimeType& ts1, const TimeType& ts2);
+    static TimeType multiply(const TimeType& ts, double scalar);
+    static TimeType divided_by(const TimeType& ts, double scalar);
+    static bool larger_than(const TimeType& lhs, const TimeType& rhs);
+    static bool less_than(const TimeType& lhs, const TimeType& rhs);
+    static bool equal(const TimeType& lhs, const TimeType& rhs);
+    static bool not_equal(const TimeType& lhs, const TimeType& rhs);
 };
 
-// template<typename TimeType> 
-// std::ostream& operator<<(std::ostream& stream, const TimeType& ts);
-
-// template<typename TimeType>
-// TimeType operator+(const TimeType& ts1, const TimeType& ts2);
-
-// template<typename TimeType> 
-// TimeType operator*(const TimeType& ts, double scalar);
-
-// template<typename TimeType> 
-// TimeType operator*(double scalar, const TimeType& ts);
-
-// template<typename TimeType> 
-// TimeType operator/(const TimeType& ts, double scalar);
-
-// template<typename TimeType> 
-// double operator/(const TimeType& ts1, const TimeType& ts2);
-
-// template<typename TimeType>
-// bool operator>(const TimeType& lhs, const TimeType& rhs);
-
-// template<typename TimeType>
-// bool operator<(const TimeType& lhs, const TimeType& rhs);
-
-// template<typename TimeType>
-// bool operator==(const TimeType& lhs, const TimeType& rhs);
-
-// template<typename TimeType>
-// bool operator<=(const TimeType& lhs, const TimeType& rhs);
-
-// template<typename TimeType>
-// bool operator>=(const TimeType& lhs, const TimeType& rhs);
-
-// template<typename TimeType>
-// bool operator!=(const TimeType& lhs, const TimeType& rhs);
+std::ostream& operator<<(std::ostream & stream, const timespec & ts);
 
 #endif // TIMEHANDLER_H

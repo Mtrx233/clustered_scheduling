@@ -159,8 +159,10 @@ int main(int argc, char *argv[])
 	// timespec correct_period_start, actual_period_start, period_finish, period_runtime;
 	TimeType correct_period_start, actual_period_start, period_finish, period_runtime;
 	T::get_time(&correct_period_start);
-	correct_period_start = correct_period_start + relative_release;
-	timespec max_period_runtime = { 0, 0 };
+	// correct_period_start = correct_period_start + relative_release;
+	correct_period_start = T::add(correct_period_start, relative_release);
+	// timespec max_period_runtime = { 0, 0 };
+	TimeType max_period_runtime = T::create_time(0, 0);
 	
 	for (unsigned i = 0; i < num_iters; ++i)
 	{
@@ -179,11 +181,15 @@ int main(int argc, char *argv[])
 		
 		// Check if the task finished before its deadline and record the maximum running time
 		T::ts_diff(actual_period_start, period_finish, period_runtime);
-		if (period_runtime > deadline) deadlines_missed += 1;
-		if (period_runtime > max_period_runtime) max_period_runtime = period_runtime;
+		// if (period_runtime > deadline) deadlines_missed += 1;
+		// if (period_runtime > max_period_runtime) max_period_runtime = period_runtime;
+		
+		if (T::larger_than(period_runtime, deadline)) deadlines_missed += 1;
+		if (T::larger_than(period_runtime, max_period_runtime)) max_period_runtime = period_runtime;
 		
 		// Update the period_start time
-		correct_period_start = correct_period_start + period;
+		// correct_period_start = correct_period_start + period;
+		correct_period_start = T::add(correct_period_start, period);
 	}
 	
 	// Finalize the task

@@ -81,7 +81,6 @@ timespec TimeHandler<timespec>::create_time(long sec, long nsec) {
     return result;
 }
 
-//template<>
 // Prints out the timespec as a single decimal number in seconds.
 std::ostream& operator<<(std::ostream & stream, const timespec & ts){
 	stream << ts.tv_sec << ".";
@@ -98,7 +97,6 @@ std::ostream& operator<<(std::ostream & stream, const timespec & ts){
 	return stream;
 }
 
-//template<>
 timespec operator+(const timespec & ts1, const timespec & ts2) {
     timespec result;
     result.tv_nsec = ts1.tv_nsec + ts2.tv_nsec;
@@ -110,7 +108,6 @@ timespec operator+(const timespec & ts1, const timespec & ts2) {
     return result;
 }
 
-//template<>
 timespec operator*(const timespec & ts, double scalar) {
     long nsecs = ts.tv_nsec + nanosec_in_sec * ts.tv_sec;
 	nsecs = static_cast<long>(nsecs * scalar);
@@ -118,12 +115,10 @@ timespec operator*(const timespec & ts, double scalar) {
 	return result;
 }
 
-//template<>
 timespec operator*(double scalar, const timespec & ts) {
     return ts * scalar;
 }
 
-//template<>
 timespec operator/(const timespec & ts, double scalar) {
     long nsecs = ts.tv_nsec + nanosec_in_sec * ts.tv_sec;
 	nsecs = static_cast<long>(nsecs / scalar);
@@ -131,39 +126,89 @@ timespec operator/(const timespec & ts, double scalar) {
 	return result;
 }
 
-//template<>
 double operator/(const timespec & ts1, const timespec & ts2) {
     long ts1_nsecs = ts1.tv_nsec + nanosec_in_sec * ts1.tv_sec;
 	long ts2_nsecs = ts2.tv_nsec + nanosec_in_sec * ts2.tv_sec;
 	return static_cast<double>(ts1_nsecs) / ts2_nsecs;
 }
 
-//template<>
 bool operator>(const timespec& lhs, const timespec& rhs) {
     return (lhs.tv_sec > rhs.tv_sec) || (lhs.tv_sec == rhs.tv_sec && lhs.tv_nsec > rhs.tv_nsec);
 }
 
-//template<>
 bool operator<(const timespec& lhs, const timespec& rhs) {
     return (lhs.tv_sec < rhs.tv_sec) || (lhs.tv_sec == rhs.tv_sec && lhs.tv_nsec < rhs.tv_nsec);
 }
 
-//template<>
 bool operator==(const timespec& lhs, const timespec& rhs) {
     return lhs.tv_sec == rhs.tv_sec && lhs.tv_nsec == rhs.tv_nsec;
 }
 
-//template<>
 bool operator<=(const timespec& lhs, const timespec& rhs) {
     return !(lhs > rhs);
 }
 
-//template<>
 bool operator>=(const timespec& lhs, const timespec& rhs) {
     return !(lhs < rhs);
 }
 
-//template<>
 bool operator!=(const timespec& lhs, const timespec& rhs) {
     return !(lhs == rhs);
 }
+
+template<>
+timespec TimeHandler<timespec>::add(const timespec& ts1, const timespec& ts2)
+{
+    timespec result;
+    result.tv_nsec = ts1.tv_nsec + ts2.tv_nsec;
+    result.tv_sec = ts1.tv_sec + ts2.tv_sec;
+    if( result.tv_nsec >= nanosec_in_sec ){
+        result.tv_nsec -= nanosec_in_sec;
+        result.tv_sec += 1;
+    }
+    return result;
+}
+
+template<>
+timespec TimeHandler<timespec>::multiply(const timespec& ts, double scalar)
+{
+    long nsecs = ts.tv_nsec + nanosec_in_sec * ts.tv_sec;
+	nsecs = static_cast<long>(nsecs * scalar);
+	timespec result = { nsecs / nanosec_in_sec, nsecs % nanosec_in_sec };
+	return result;
+}
+
+template<>
+timespec TimeHandler<timespec>::divided_by(const timespec& ts, double scalar)
+{
+    long nsecs = ts.tv_nsec + nanosec_in_sec * ts.tv_sec;
+	nsecs = static_cast<long>(nsecs / scalar);
+	timespec result = { nsecs / nanosec_in_sec, nsecs % nanosec_in_sec };
+	return result;
+}
+
+template<>
+bool TimeHandler<timespec>::larger_than(const timespec& lhs, const timespec& rhs)
+{
+    return (lhs.tv_sec > rhs.tv_sec) || (lhs.tv_sec == rhs.tv_sec && lhs.tv_nsec > rhs.tv_nsec);
+}
+
+template<>
+bool TimeHandler<timespec>::less_than(const timespec& lhs, const timespec& rhs)
+{
+    return (lhs.tv_sec < rhs.tv_sec) || (lhs.tv_sec == rhs.tv_sec && lhs.tv_nsec < rhs.tv_nsec);
+}
+
+template<>
+bool TimeHandler<timespec>::equal(const timespec& lhs, const timespec& rhs)
+{
+    return lhs.tv_sec == rhs.tv_sec && lhs.tv_nsec == rhs.tv_nsec;
+}
+
+template<>
+bool TimeHandler<timespec>::not_equal(const timespec& lhs, const timespec& rhs)
+{
+    return !(lhs == rhs);
+}
+
+template class TimeHandler<timespec>;
