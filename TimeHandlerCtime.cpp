@@ -73,6 +73,14 @@ void TimeHandler<timespec>::busy_work(timespec length)
 	}
 }
 
+template<>
+timespec TimeHandler<timespec>::create_time(long sec, long nsec) {
+    timespec result;
+    result.tv_sec = sec;
+    result.tv_nsec = nsec;
+    return result;
+}
+
 //template<>
 // Prints out the timespec as a single decimal number in seconds.
 std::ostream& operator<<(std::ostream & stream, const timespec & ts){

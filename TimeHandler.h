@@ -22,6 +22,7 @@ public:
     static void sleep_until_ts (TimeType& end_time);
     static void sleep_for_ts (TimeType& sleep_time);
     static void busy_work(TimeType length);
+    static TimeType create_time(long sec, long nsec);
 
     // friend std::ostream& operator<<(std::ostream& stream, const TimeType& ts);
     // friend TimeType operator+(const TimeType& ts1, const TimeType& ts2);

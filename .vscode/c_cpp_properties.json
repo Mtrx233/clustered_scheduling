@@ -3,7 +3,15 @@
         {
             "name": "Mac",
             "includePath": [
-                "${default}"
+                "${default}",
+                "${workspaceFolder}/**",
+                "/opt/local/include",
+                "/opt/local/lib/gcc13/gcc/arm64-apple-darwin22/13.2.0/",
+                "/opt/local/libexec/gcc/arm64-apple-darwin22/13.2.0/",
+                "/opt/local/lib/gcc13/gcc/arm64-apple-darwin22/",
+                // "/opt/local/lib/gcc13/gcc/arm64-apple-darwin22/13.2.0/../../../../../arm64-apple-darwin22/lib/arm64-apple-darwin22/13.2.0/",
+                // "/opt/local/lib/gcc13/gcc/arm64-apple-darwin22/13.2.0/../../../../../arm64-apple-darwin22/lib/",
+                "/opt/local/lib/gcc13/gcc/arm64-apple-darwin22/13.2.0/include"
             ],
             "defines": [],
             "macFrameworkPath": [
