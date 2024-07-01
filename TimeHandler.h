@@ -9,6 +9,7 @@ TimeHandlerChrono.cpp.
 #define TIMEHANDLER_H
 
 #include <iostream>
+#include <ctime>
 
 constexpr long int nanosec_in_sec = 1000000000;
 constexpr long int millisec_in_sec = 1000;
@@ -24,20 +25,20 @@ public:
     static void busy_work(TimeType length);
     static TimeType create_time(long sec, long nsec);
     
-    template <tyname T>
-    friend std::ostream& operator<<(std::ostream& stream, const T& ts);
-    friend TimeType operator+(const TimeType& ts1, const TimeType& ts2);
-    friend TimeType operator*(const TimeType& ts, double scalar);
-    friend TimeType operator*(double scalar, const TimeType& ts);
-    friend TimeType operator/(const TimeType& ts, double scalar);
-    friend double operator/(const TimeType& ts1, const TimeType& ts2);
+    // template <typename T>
+    // friend std::ostream& operator<<(std::ostream& stream, const T& ts);
+    // friend TimeType operator+(const TimeType& ts1, const TimeType& ts2);
+    // friend TimeType operator*(const TimeType& ts, double scalar);
+    // friend TimeType operator*(double scalar, const TimeType& ts);
+    // friend TimeType operator/(const TimeType& ts, double scalar);
+    // friend double operator/(const TimeType& ts1, const TimeType& ts2);
     
-    friend bool operator>(const TimeType& lhs, const TimeType& rhs);
-    friend bool operator<(const TimeType& lhs, const TimeType& rhs);
-    friend bool operator==(const TimeType& lhs, const TimeType& rhs);
-    friend bool operator<=(const TimeType& lhs, const TimeType& rhs);
-    friend bool operator>=(const TimeType& lhs, const TimeType& rhs);
-    friend bool operator!=(const TimeType& lhs, const TimeType& rhs);
+    // friend bool operator>(const TimeType& lhs, const TimeType& rhs);
+    // friend bool operator<(const TimeType& lhs, const TimeType& rhs);
+    // friend bool operator==(const TimeType& lhs, const TimeType& rhs);
+    // friend bool operator<=(const TimeType& lhs, const TimeType& rhs);
+    // friend bool operator>=(const TimeType& lhs, const TimeType& rhs);
+    // friend bool operator!=(const TimeType& lhs, const TimeType& rhs);
 
     static TimeType add(const TimeType& ts1, const TimeType& ts2);
     static TimeType multiply(const TimeType& ts, double scalar);
@@ -49,5 +50,7 @@ public:
 };
 
 std::ostream& operator<<(std::ostream & stream, const timespec & ts);
+timespec operator+(const timespec & ts1, const timespec & ts2);
+bool operator<(const timespec& lhs, const timespec& rhs);
 
 #endif // TIMEHANDLER_H

@@ -12,74 +12,74 @@ inline void TimeHandler<timespec>::get_time(timespec* ts)
 //Takes the difference between two timespec structs and stores the result in
 //the specified timespec. Does no bounds checking. The result is always
 //a positive time value. 
-template<>
-void TimeHandler<timespec>::ts_diff (timespec& ts1, timespec& ts2, timespec& result)
-{
-    if ((ts2.tv_nsec - ts1.tv_nsec) < 0) {
-        result.tv_sec = ts2.tv_sec - ts1.tv_sec - 1;
-        result.tv_nsec = ts2.tv_nsec - ts1.tv_nsec + nanosec_in_sec;
-    } else {
-        result.tv_sec = ts2.tv_sec - ts1.tv_sec;
-        result.tv_nsec = ts2.tv_nsec - ts1.tv_nsec;
-    }
+// template<>
+// void TimeHandler<timespec>::ts_diff (timespec& ts1, timespec& ts2, timespec& result)
+// {
+//     if ((ts2.tv_nsec - ts1.tv_nsec) < 0) {
+//         result.tv_sec = ts2.tv_sec - ts1.tv_sec - 1;
+//         result.tv_nsec = ts2.tv_nsec - ts1.tv_nsec + nanosec_in_sec;
+//     } else {
+//         result.tv_sec = ts2.tv_sec - ts1.tv_sec;
+//         result.tv_nsec = ts2.tv_nsec - ts1.tv_nsec;
+//     }
 
-    if( result.tv_nsec < 0 ){             //If we have a negative nanoseconds
-        result.tv_nsec += nanosec_in_sec; //value then we carry over from the
-        result.tv_sec -= 1;               //seconds part of the timespec
-    }
-}
+//     if( result.tv_nsec < 0 ){             //If we have a negative nanoseconds
+//         result.tv_nsec += nanosec_in_sec; //value then we carry over from the
+//         result.tv_sec -= 1;               //seconds part of the timespec
+//     }
+// }
 
-template<>
-void TimeHandler<timespec>::sleep_until_ts (timespec& end_time)
-{
-    timespec curr_time;
-    get_time(&curr_time);
+// template<>
+// void TimeHandler<timespec>::sleep_until_ts (timespec& end_time)
+// {
+//     timespec curr_time;
+//     get_time(&curr_time);
 
-	//If we have already passed end_time, then return immediately
-	if( curr_time > end_time )
-		return;
+// 	//If we have already passed end_time, then return immediately
+// 	if( curr_time > end_time )
+// 		return;
 
-    //Otherwise, nanosleep
-	timespec wait;
-	ts_diff(curr_time, end_time, wait);
-	while( nanosleep(&wait,&wait) != 0 ){
-		if ((wait.tv_sec == 0) && (wait.tv_nsec < 0))
-			break;
-		if ((wait.tv_sec == 0) && (wait.tv_nsec == 0))
-			break;
-	}
-}
+//     //Otherwise, nanosleep
+// 	timespec wait;
+// 	ts_diff(curr_time, end_time, wait);
+// 	while( nanosleep(&wait,&wait) != 0 ){
+// 		if ((wait.tv_sec == 0) && (wait.tv_nsec < 0))
+// 			break;
+// 		if ((wait.tv_sec == 0) && (wait.tv_nsec == 0))
+// 			break;
+// 	}
+// }
 
-template<>
-void TimeHandler<timespec>::sleep_for_ts (timespec& sleep_time)
-{
-    //Otherwise, nanosleep
-    timespec zero = { 0, 0 };
-	while( nanosleep(&sleep_time,&sleep_time) != 0 )
-	{
-		if (sleep_time <= zero) break;
-	}
-}
+// template<>
+// void TimeHandler<timespec>::sleep_for_ts (timespec& sleep_time)
+// {
+//     //Otherwise, nanosleep
+//     timespec zero = { 0, 0 };
+// 	while( nanosleep(&sleep_time,&sleep_time) != 0 )
+// 	{
+// 		if (sleep_time <= zero) break;
+// 	}
+// }
 
-template<>
-void TimeHandler<timespec>::busy_work(timespec length)
-{
-    timespec curr_time;
-	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &curr_time);
-	timespec target_time = curr_time + length;
-	while(curr_time < target_time)
-	{
-		clock_gettime(CLOCK_THREAD_CPUTIME_ID, &curr_time);
-	}
-}
+// template<>
+// void TimeHandler<timespec>::busy_work(timespec length)
+// {
+//     timespec curr_time;
+// 	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &curr_time);
+// 	timespec target_time = curr_time + length;
+// 	while(curr_time < target_time)
+// 	{
+// 		clock_gettime(CLOCK_THREAD_CPUTIME_ID, &curr_time);
+// 	}
+// }
 
-template<>
-timespec TimeHandler<timespec>::create_time(long sec, long nsec) {
-    timespec result;
-    result.tv_sec = sec;
-    result.tv_nsec = nsec;
-    return result;
-}
+// template<>
+// timespec TimeHandler<timespec>::create_time(long sec, long nsec) {
+//     timespec result;
+//     result.tv_sec = sec;
+//     result.tv_nsec = nsec;
+//     return result;
+// }
 
 // Prints out the timespec as a single decimal number in seconds.
 std::ostream& operator<<(std::ostream & stream, const timespec & ts){
@@ -209,6 +209,75 @@ template<>
 bool TimeHandler<timespec>::not_equal(const timespec& lhs, const timespec& rhs)
 {
     return !(lhs == rhs);
+}
+
+template<>
+void TimeHandler<timespec>::ts_diff (timespec& ts1, timespec& ts2, timespec& result)
+{
+    if ((ts2.tv_nsec - ts1.tv_nsec) < 0) {
+        result.tv_sec = ts2.tv_sec - ts1.tv_sec - 1;
+        result.tv_nsec = ts2.tv_nsec - ts1.tv_nsec + nanosec_in_sec;
+    } else {
+        result.tv_sec = ts2.tv_sec - ts1.tv_sec;
+        result.tv_nsec = ts2.tv_nsec - ts1.tv_nsec;
+    }
+
+    if( result.tv_nsec < 0 ){             //If we have a negative nanoseconds
+        result.tv_nsec += nanosec_in_sec; //value then we carry over from the
+        result.tv_sec -= 1;               //seconds part of the timespec
+    }
+}
+
+template<>
+void TimeHandler<timespec>::sleep_until_ts (timespec& end_time)
+{
+    timespec curr_time;
+    get_time(&curr_time);
+
+	//If we have already passed end_time, then return immediately
+	if( curr_time > end_time )
+		return;
+
+    //Otherwise, nanosleep
+	timespec wait;
+	ts_diff(curr_time, end_time, wait);
+	while( nanosleep(&wait,&wait) != 0 ){
+		if ((wait.tv_sec == 0) && (wait.tv_nsec < 0))
+			break;
+		if ((wait.tv_sec == 0) && (wait.tv_nsec == 0))
+			break;
+	}
+}
+
+template<>
+void TimeHandler<timespec>::sleep_for_ts (timespec& sleep_time)
+{
+    //Otherwise, nanosleep
+    timespec zero = { 0, 0 };
+	while( nanosleep(&sleep_time,&sleep_time) != 0 )
+	{
+		if (sleep_time <= zero) break;
+	}
+}
+
+template<>
+void TimeHandler<timespec>::busy_work(timespec length)
+{
+    timespec curr_time;
+	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &curr_time);
+	timespec target_time = curr_time + length;
+	while(curr_time < target_time)
+	{
+		clock_gettime(CLOCK_THREAD_CPUTIME_ID, &curr_time);
+	}
+}
+
+template<>
+timespec TimeHandler<timespec>::create_time(long sec, long nsec) {
+    timespec result;
+    result.tv_sec = sec;
+    result.tv_nsec = nsec;
+    return result;
 }
 
 template class TimeHandler<timespec>;

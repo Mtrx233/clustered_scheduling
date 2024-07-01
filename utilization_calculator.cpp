@@ -7,8 +7,19 @@
 #include <omp.h>
 #include <unistd.h>
 #include "task.h"
-#include "timespec_functions.h"
+// #include "timespec_functions.h"
+#include "TimeHandler.h"
 #include "histogram.h"
+
+// Define a general TimeType
+#ifdef USE_CHRONO
+using Clock = system_clock;
+using TimeType = std::chrono::system_clock::time_point;
+#else
+using TimeType = timespec;
+#endif
+
+using T = TimeHandler<TimeType>;
 
 enum rt_gomp_utilization_calculator_error_codes
 {
@@ -99,9 +110,12 @@ int main(int argc, char *argv[])
 	fprintf(stderr, "OMP sched: %u %u\n", omp_sched, omp_mod);
 	
 	// Initialize a histogram to record the profiling results
-	const timespec start_with = { 0, 0 };
-	const timespec bucket_width = { bucket_width_sec, bucket_width_ns };
-	Histogram<timespec> histogram(start_with, bucket_width);
+	// const timespec start_with = { 0, 0 };
+	// const timespec bucket_width = { bucket_width_sec, bucket_width_ns };
+	const TimeType start_with = T::create_time(0, 0);
+	const TimeType bucket_width = T::create_time(bucket_width_sec, bucket_width_ns);
+	// Histogram<timespec> histogram(start_with, bucket_width);
+	Histogram<TimeType> histogram(start_with, bucket_width);
 
 	// Initialize task
 	if (task.init != NULL)
@@ -115,14 +129,15 @@ int main(int argc, char *argv[])
 	}
 	
 	// Repeatedly profile runs of the task
-	timespec start, finish, runtime;
+	// timespec start, finish, runtime;
+	TimeType start, finish, runtime = T::create_time(0, 0);
 	for (unsigned i = 0; i < num_repetitions; ++i)
 	{
-		get_time(&start);
+		T::get_time(&start);
 		
 		ret_val = task.run(task_argc, task_argv);
 		
-		get_time(&finish);
+		T::get_time(&finish);
 		
 		if (ret_val != 0)
 		{
@@ -130,7 +145,7 @@ int main(int argc, char *argv[])
 			return RT_GOMP_UTILIZATION_CALCULATOR_RUN_ERROR;
 		}
 		
-		ts_diff(start, finish, runtime);
+		T::ts_diff(start, finish, runtime);
 		histogram.add_observation(runtime);
 	}
 	

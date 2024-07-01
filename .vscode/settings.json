@@ -79,6 +79,11 @@
         "chrono": "cpp",
         "concepts": "cpp",
         "numeric": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "*.tcc": "cpp",
+        "functional": "cpp",
+        "iterator": "cpp",
+        "memory_resource": "cpp",
+        "utility": "cpp"
     }
 }

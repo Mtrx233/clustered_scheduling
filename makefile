@@ -1,7 +1,8 @@
 CC = g++
 FLAGS = -Wall -g
 LIBS = -L. -lclustering -lrt -lm
-CLUSTERING_OBJECTS = single_use_barrier.o timespec_functions.o
+# CLUSTERING_OBJECTS = single_use_barrier.o timespec_functions.o
+CLUSTERING_OBJECTS = single_use_barrier.o TimeHandlerCtime.o
 
 all: clustering_distribution simple_task simple_task_utilization
 
@@ -28,8 +29,11 @@ task_manager.o: task_manager.cpp
 single_use_barrier.o: single_use_barrier.cpp
 	$(CC) $(FLAGS) -c single_use_barrier.cpp
 	
-timespec_functions.o: timespec_functions.cpp
-	$(CC) $(FLAGS) -c timespec_functions.cpp
+# timespec_functions.o: timespec_functions.cpp
+# 	$(CC) $(FLAGS) -c timespec_functions.cpp
+
+TimeHandlerCtime.o: TimeHandlerCtime.cpp
+	$(CC) $(FLAGS) -c TimeHandlerCtime.cpp
 
 clean:
 	rm -f *.o *.rtps *.pyc libclustering.a clustering_launcher simple_task simple_task_utilization synthetic_task synthetic_task_utilization
